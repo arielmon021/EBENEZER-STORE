@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compras - Ebenezer Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🏪</span>
+                    <span class="logo-text">EBENEZER STORE</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="productos.html" class="nav-item" data-page="productos">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Productos</span>
+                </a>
+                <a href="inventario.html" class="nav-item" data-page="inventario">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Inventario</span>
+                </a>
+                <a href="ventas.html" class="nav-item" data-page="ventas">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">Punto de Venta</span>
+                </a>
+                <a href="compras.html" class="nav-item active" data-page="compras">
+                    <span class="nav-icon">📥</span>
+                    <span class="nav-text">Compras</span>
+                </a>
+                <a href="proveedores.html" class="nav-item" data-page="proveedores">
+                    <span class="nav-icon">🏭</span>
+                    <span class="nav-text">Proveedores</span>
+                </a>
+                <a href="banco.html" class="nav-item" data-page="banco">
+                    <span class="nav-icon">🏦</span>
+                    <span class="nav-text">Banco del Barrio</span>
+                </a>
+                <a href="reportes.html" class="nav-item" data-page="reportes">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Reportes</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Administrador</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+                <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">⏻</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div class="header-left">
+                    <button class="mobile-toggle" id="mobileToggle">☰</button>
+                    <h1>Compras</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn btn-primary" id="btnNuevaCompra">Nueva Compra</button>
+                </div>
+            </div>
+
+            <div class="page-body">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="table-container">
+                            <table class="data-table" id="comprasTable">
+                                <thead>
+                                    <tr>
+                                        <th># Factura</th>
+                                        <th>Proveedor</th>
+                                        <th>Cant. Productos</th>
+                                        <th>Total</th>
+                                        <th>Fecha</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Data will be loaded here -->
+                                </tbody>
+                            </table>
+                            <div id="comprasEmptyState" class="empty-state" style="display: none;">
+                                <div class="empty-icon">📥</div>
+                                <div class="empty-text">No hay compras registradas</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- New Compra Modal -->
+    <div class="modal" id="modalCompra">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2>Registrar Compra</h2>
+                <button class="modal-close" onclick="App.closeModal('modalCompra')">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="compraForm">
+                    <div class="form-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="proveedorId">Proveedor *</label>
+                            <select id="proveedorId" class="form-control" required>
+                                <option value="">Seleccione un proveedor</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="factura">Número de Factura *</label>
+                            <input type="text" id="factura" class="form-control" required>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3>Productos</h3>
+                            <button type="button" class="btn btn-secondary btn-sm" id="btnAddItem">Agregar Producto</button>
+                        </div>
+                        
+                        <div class="table-container" style="max-height: 300px; overflow-y: auto;">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40%;">Producto</th>
+                                        <th style="width: 15%;">Cantidad</th>
+                                        <th style="width: 20%;">Costo Unit.</th>
+                                        <th style="width: 20%;">Subtotal</th>
+                                        <th style="width: 5%;"></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="compraItemsContainer">
+                                    <!-- Items will be added here -->
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div style="text-align: right; margin-top: 1rem; font-size: 1.2rem;">
+                            <strong>Total: </strong>
+                            <span id="compraTotalDisplay" style="color: var(--accent-success); font-weight: bold;">$0.00</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="App.closeModal('modalCompra')">Cancelar</button>
+                <button type="button" class="btn btn-primary" id="btnSaveCompra">Guardar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Compra Modal -->
+    <div class="modal" id="modalDetalle">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Detalle de Compra</h2>
+                <button class="modal-close" onclick="App.closeModal('modalDetalle')">×</button>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Proveedor</div>
+                        <div id="detProveedor" style="font-weight: 500; font-size: 1.1rem;"></div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Factura</div>
+                        <div id="detFactura" style="font-weight: 500; font-size: 1.1rem;"></div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Fecha</div>
+                        <div id="detFecha" style="font-weight: 500; font-size: 1.1rem;"></div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-muted); font-size: 0.9rem;">Total</div>
+                        <div id="detTotal" style="font-weight: bold; color: var(--accent-success); font-size: 1.2rem;"></div>
+                    </div>
+                </div>
+                
+                <h3>Productos</h3>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cant.</th>
+                                <th>Costo</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody id="detItemsContainer">
+                            <!-- Items will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="App.closeModal('modalDetalle')">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationArea"></div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/compras.js"></script>
+</body>
+</html>
