@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Punto de Venta - Ebenezer Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🏪</span>
+                    <span class="logo-text">EBENEZER STORE</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="nav-item" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="productos.html" class="nav-item" data-page="productos">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">Productos</span>
+                </a>
+                <a href="inventario.html" class="nav-item" data-page="inventario">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-text">Inventario</span>
+                </a>
+                <a href="ventas.html" class="nav-item active" data-page="ventas">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">Punto de Venta</span>
+                </a>
+                <a href="compras.html" class="nav-item" data-page="compras">
+                    <span class="nav-icon">📥</span>
+                    <span class="nav-text">Compras</span>
+                </a>
+                <a href="proveedores.html" class="nav-item" data-page="proveedores">
+                    <span class="nav-icon">🏭</span>
+                    <span class="nav-text">Proveedores</span>
+                </a>
+                <a href="banco.html" class="nav-item" data-page="banco">
+                    <span class="nav-icon">🏦</span>
+                    <span class="nav-text">Banco del Barrio</span>
+                </a>
+                <a href="reportes.html" class="nav-item" data-page="reportes">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">Reportes</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <span class="user-name" id="userName">Administrador</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+                <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">⏻</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-header">
+                <div class="header-left">
+                    <button class="mobile-toggle" id="mobileToggle">☰</button>
+                    <h1>Punto de Venta</h1>
+                </div>
+            </div>
+
+            <div class="page-body">
+                <div class="pos-layout">
+                    <!-- Left: Products -->
+                    <div class="pos-products card">
+                        <div class="card-header">
+                            <div class="search-box" style="width: 100%;">
+                                <input type="text" id="posSearch" class="search-input" placeholder="Buscar productos por nombre o código...">
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="pos-product-grid" id="posProductGrid">
+                                <!-- Product cards will be loaded here -->
+                            </div>
+                            <div id="posEmptyState" class="empty-state" style="display: none;">
+                                <div class="empty-icon">🔍</div>
+                                <div class="empty-text">No se encontraron productos disponibles</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Cart -->
+                    <div class="pos-cart card">
+                        <div class="card-header">
+                            <h2>Carrito de Venta</h2>
+                        </div>
+                        <div class="card-body" style="display: flex; flex-direction: column; padding: 0;">
+                            <div class="cart-items" id="cartItems">
+                                <!-- Cart items will be loaded here -->
+                            </div>
+                            
+                            <div id="cartEmptyState" class="empty-state">
+                                <div class="empty-icon">🛒</div>
+                                <div class="empty-text">El carrito está vacío</div>
+                            </div>
+
+                            <div class="cart-summary">
+                                <div class="summary-row">
+                                    <span>Subtotal:</span>
+                                    <span id="cartSubtotal">$0.00</span>
+                                </div>
+                                <div class="summary-row cart-total">
+                                    <span>Total:</span>
+                                    <span id="cartTotal">$0.00</span>
+                                </div>
+                            </div>
+
+                            <div class="payment-section" style="padding: 1rem; border-top: 1px solid var(--border-color);">
+                                <div class="form-group">
+                                    <label class="form-label" for="cliente">Cliente</label>
+                                    <input type="text" id="cliente" class="form-control" value="Consumidor Final">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Método de Pago</label>
+                                    <div id="paymentMethods" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button type="button" class="btn btn-secondary payment-method-btn active" data-method="efectivo" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💵 Efectivo
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="tarjeta_debito" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💳 T. Débito
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="tarjeta_credito" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💳 T. Crédito
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="transferencia" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            🏦 Transferencia
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label" for="montoRecibido">Monto Recibido</label>
+                                        <div style="position: relative;">
+                                            <span style="position: absolute; left: 10px; top: 10px; color: var(--text-muted);">$</span>
+                                            <input type="number" id="montoRecibido" class="form-control" min="0" step="0.01" style="padding-left: 25px;">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Cambio</label>
+                                        <div class="form-control" id="cambio" style="background: var(--bg-secondary); text-align: right; font-weight: bold; color: var(--accent-success);">
+                                            $0.00
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" id="btnProcesarVenta" class="btn btn-success" style="width: 100%; margin-top: 1rem; padding: 1rem; font-size: 1.1rem; font-weight: bold;" disabled>
+                                    Procesar Venta
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Receipt Modal -->
+    <div class="modal" id="modalRecibo">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2>Recibo de Venta</h2>
+                <button class="modal-close" id="btnCloseRecibo">×</button>
+            </div>
+            <div class="modal-body" id="reciboContent" style="font-family: monospace; font-size: 14px; background: #fff; color: #000; padding: 20px;">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">EBENEZER STORE</h3>
+                    <p style="margin: 5px 0;">Comprobante de Venta</p>
+                    <p style="margin: 5px 0;" id="reciboFecha"></p>
+                    <p style="margin: 5px 0;" id="reciboCliente"></p>
+                </div>
+                <div style="border-top: 1px dashed #000; border-bottom: 1px dashed #000; margin: 10px 0; padding: 10px 0;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align: left;">Cant</th>
+                                <th style="text-align: left;">Desc</th>
+                                <th style="text-align: right;">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reciboItems">
+                            <!-- Items go here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div style="text-align: right;">
+                    <p style="margin: 5px 0; font-weight: bold;">TOTAL: <span id="reciboTotal"></span></p>
+                    <p style="margin: 5px 0;">Recibido: <span id="reciboPagado"></span></p>
+                    <p style="margin: 5px 0;">Cambio: <span id="reciboCambio"></span></p>
+                    <p style="margin: 5px 0;">Método: <span id="reciboMetodo"></span></p>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>¡Gracias por su compra!</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="App.closeModal('modalRecibo')">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="window.print()">Imprimir</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationArea"></div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/ventas.js"></script>
+</body>
+</html>
