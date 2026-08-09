@@ -110,15 +110,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const maxQty = sortedProducts.length > 0 ? sortedProducts[0].cantidad : 1;
 
-        let topProductsHtml = sortedProducts.length > 0 ? sortedProducts.map(p => {
-            const width = Math.max((p.cantidad / maxQty) * 100, 5);
+        let topProductsHtml = sortedProducts.length > 0 ? sortedProducts.map((p, i) => {
+            const width = Math.max((p.cantidad / maxQty) * 100, 8);
+            const colors = ['#7c3aed', '#6366f1', '#3b82f6', '#06b6d4', '#8b5cf6'];
+            const color = colors[i] || colors[0];
             return `
-                <div class="chart-bar">
-                    <div class="chart-label">${p.nombre} (${p.cantidad} und.)</div>
-                    <div class="chart-bar-fill" style="width: ${width}%; background: var(--accent-primary);"></div>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem;">
+                    <div style="width: 140px; font-size: 0.85rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${p.nombre}">${p.nombre}</div>
+                    <div style="flex: 1; height: 28px; background: var(--bg-input); border-radius: 6px; overflow: hidden; position: relative;">
+                        <div style="height: 100%; width: ${width}%; background: linear-gradient(90deg, ${color}, ${color}cc); border-radius: 6px; transition: width 1s ease-out; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px;">
+                            <span style="font-size: 0.75rem; font-weight: 700; color: white;">${p.cantidad}</span>
+                        </div>
+                    </div>
+                    <div style="width: 50px; text-align: right; font-size: 0.8rem; color: var(--text-muted);">${p.cantidad} und.</div>
                 </div>
             `;
-        }).join('') : '<p class="text-muted">No hay datos de productos vendidos</p>';
+        }).join('') : '<p class="text-muted" style="text-align:center; padding: 2rem;">No hay datos de productos vendidos</p>';
 
         let tableRows = filteredVentas.map(v => `
             <tr>
@@ -153,10 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             <div class="card" style="margin-bottom: 20px;">
                 <div class="card-header"><h2>Top 5 Productos Más Vendidos</h2></div>
-                <div class="card-body">
-                    <div class="report-chart">
-                        ${topProductsHtml}
-                    </div>
+                <div class="card-body" style="padding: 1.5rem;">
+                    ${topProductsHtml}
                 </div>
             </div>
 

@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         App.openModal('modalCompra');
     }
     
-    window.addItemRow = function() {
+    function addItemRow() {
         const index = itemRowCount++;
         const tr = document.createElement('tr');
         tr.id = `itemRow_${index}`;
@@ -158,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
     
-    window.updateSubtotal = function(index) {
+    function updateSubtotal(index) {
         const row = document.getElementById(`itemRow_${index}`);
         if (!row) return;
         

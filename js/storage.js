@@ -124,8 +124,19 @@ const DB = {
                 {"id":"venta-3","fecha":now,"items":[{"productoId":"prod-2","nombre":"Lápiz HB","cantidad":5,"precio":0.35,"subtotal":1.75},{"productoId":"prod-3","nombre":"Borrador Blanco","cantidad":2,"precio":0.25,"subtotal":0.50}],"total":2.25,"pago":3.00,"cambio":0.75,"cliente":"Consumidor Final"}
             ];
             this.save(this.KEYS.VENTAS, defaultSales);
-            this.save(this.KEYS.COMPRAS, []);
-            this.save(this.KEYS.TRANSACCIONES, []);
+            const defaultCompras = [
+                {"id":"comp-1","proveedorId":"prov-1","factura":"FAC-001","fecha":now,"items":[{"productoId":"prod-1","nombre":"Cuaderno Universitario 100H","cantidad":30,"costo":1.20,"subtotal":36.00},{"productoId":"prod-2","nombre":"Lápiz HB","cantidad":50,"costo":0.20,"subtotal":10.00}],"total":46.00},
+                {"id":"comp-2","proveedorId":"prov-2","factura":"FAC-002","fecha":now,"items":[{"productoId":"prod-5","nombre":"Mochila Escolar","cantidad":5,"costo":10.00,"subtotal":50.00},{"productoId":"prod-10","nombre":"Muñeca Pequeña","cantidad":10,"costo":3.50,"subtotal":35.00}],"total":85.00},
+                {"id":"comp-3","proveedorId":"prov-3","factura":"FAC-003","fecha":now,"items":[{"productoId":"prod-9","nombre":"Esmalte de Uñas","cantidad":20,"costo":1.30,"subtotal":26.00}],"total":26.00}
+            ];
+            this.save(this.KEYS.COMPRAS, defaultCompras);
+            
+            const defaultTransacciones = [
+                {"id":"trans-1","tipo":"Depósito","cliente":"Juan Pérez","monto":50.00,"descripcion":"Depósito de ahorros","fecha":now},
+                {"id":"trans-2","tipo":"Recarga","cliente":"María López","monto":10.00,"descripcion":"Recarga Claro","fecha":now},
+                {"id":"trans-3","tipo":"Pago de Servicio","cliente":"Carlos Rodríguez","monto":25.00,"descripcion":"Pago de luz","fecha":now}
+            ];
+            this.save(this.KEYS.TRANSACCIONES, defaultTransacciones);
         }
     },
 

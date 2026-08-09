@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // State
     let cart = [];
     let availableProducts = [];
+    let selectedPaymentMethod = 'efectivo';
     
     // DOM Elements
     const productGrid = document.getElementById('posProductGrid');
@@ -33,6 +34,42 @@ document.addEventListener('DOMContentLoaded', () => {
     
     btnProcesar.addEventListener('click', processVenta);
     
+    // Payment method buttons
+    document.querySelectorAll('.payment-method-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.querySelectorAll('.payment-method-btn').forEach(b => {
+                b.classList.remove('active');
+                b.style.background = '';
+                b.style.borderColor = '';
+                b.style.color = '';
+            });
+            btn.classList.add('active');
+            btn.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
+            btn.style.borderColor = '#7c3aed';
+            btn.style.color = 'white';
+            selectedPaymentMethod = btn.dataset.method;
+            
+            // If card or transfer, auto-fill payment and hide monto/cambio section
+            const montoSection = montoRecibidoInput.closest('.form-row');
+            if (selectedPaymentMethod !== 'efectivo') {
+                // For card/transfer: simulate exact payment
+                montoSection.style.display = 'none';
+                btnProcesar.disabled = cart.length === 0 ? true : false;
+            } else {
+                montoSection.style.display = '';
+                calculateChange();
+            }
+        });
+    });
+
+    // Set initial active style
+    const initialBtn = document.querySelector('.payment-method-btn[data-method="efectivo"]');
+    if (initialBtn) {
+        initialBtn.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
+        initialBtn.style.borderColor = '#7c3aed';
+        initialBtn.style.color = 'white';
+    }
+
     // Functions
     function loadProducts() {
         const allProducts = DB.getAll(DB.KEYS.PRODUCTOS);
@@ -217,22 +254,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const total = cart.reduce((sum, item) => sum + item.subtotal, 0);
         const recibido = parseFloat(montoRecibidoInput.value) || 0;
         
-        if (montoRecibidoInput.value && recibido < total) {
+        if (selectedPaymentMethod === 'efectivo' && montoRecibidoInput.value && recibido < total) {
             App.showNotification('El monto recibido es menor al total', 'danger');
             return;
         }
         
-        const pago = recibido >= total ? recibido : total;
-        const cambio = pago - total;
+        // For non-cash methods, payment equals total exactly
+        const isCash = selectedPaymentMethod === 'efectivo';
+        const finalPago = isCash ? (recibido >= total ? recibido : total) : total;
+        const finalCambio = isCash ? (finalPago - total) : 0;
+
+        const metodosLabels = {
+            'efectivo': 'Efectivo',
+            'tarjeta_debito': 'Tarjeta de Débito',
+            'tarjeta_credito': 'Tarjeta de Crédito',
+            'transferencia': 'Transferencia Bancaria'
+        };
         
         const sale = {
             id: DB.generateId(),
             fecha: new Date().toISOString(),
             items: JSON.parse(JSON.stringify(cart)),
             total: total,
-            pago: pago,
-            cambio: cambio,
-            cliente: clienteInput.value || 'Consumidor Final'
+            pago: finalPago,
+            cambio: finalCambio,
+            cliente: clienteInput.value || 'Consumidor Final',
+            metodoPago: metodosLabels[selectedPaymentMethod] || 'Efectivo'
         };
         
         // Save to DB
@@ -259,6 +306,22 @@ document.addEventListener('DOMContentLoaded', () => {
         cart = [];
         montoRecibidoInput.value = '';
         clienteInput.value = 'Consumidor Final';
+        selectedPaymentMethod = 'efectivo';
+        document.querySelectorAll('.payment-method-btn').forEach(b => {
+            b.classList.remove('active');
+            b.style.background = '';
+            b.style.borderColor = '';
+            b.style.color = '';
+        });
+        const cashBtn = document.querySelector('.payment-method-btn[data-method="efectivo"]');
+        if (cashBtn) {
+            cashBtn.classList.add('active');
+            cashBtn.style.background = 'linear-gradient(135deg, #7c3aed, #6366f1)';
+            cashBtn.style.borderColor = '#7c3aed';
+            cashBtn.style.color = 'white';
+        }
+        const montoSection = montoRecibidoInput.closest('.form-row');
+        if (montoSection) montoSection.style.display = '';
         renderCart();
         loadProducts(); // Reload to reflect stock changes
     }
@@ -283,6 +346,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('reciboTotal').textContent = App.formatCurrency(sale.total);
         document.getElementById('reciboPagado').textContent = App.formatCurrency(sale.pago);
         document.getElementById('reciboCambio').textContent = App.formatCurrency(sale.cambio);
+        
+        const reciboMetodo = document.getElementById('reciboMetodo');
+        if (reciboMetodo) {
+            reciboMetodo.textContent = sale.metodoPago || 'Efectivo';
+        }
         
         App.openModal('modalRecibo');
     }

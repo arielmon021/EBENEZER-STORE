@@ -123,6 +123,23 @@
                                     <label class="form-label" for="cliente">Cliente</label>
                                     <input type="text" id="cliente" class="form-control" value="Consumidor Final">
                                 </div>
+                                <div class="form-group">
+                                    <label class="form-label">Método de Pago</label>
+                                    <div id="paymentMethods" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        <button type="button" class="btn btn-secondary payment-method-btn active" data-method="efectivo" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💵 Efectivo
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="tarjeta_debito" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💳 T. Débito
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="tarjeta_credito" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            💳 T. Crédito
+                                        </button>
+                                        <button type="button" class="btn btn-secondary payment-method-btn" data-method="transferencia" style="flex: 1; min-width: 100px; padding: 0.6rem; font-size: 0.8rem;">
+                                            🏦 Transferencia
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label class="form-label" for="montoRecibido">Monto Recibido</label>
@@ -181,6 +198,7 @@
                     <p style="margin: 5px 0; font-weight: bold;">TOTAL: <span id="reciboTotal"></span></p>
                     <p style="margin: 5px 0;">Recibido: <span id="reciboPagado"></span></p>
                     <p style="margin: 5px 0;">Cambio: <span id="reciboCambio"></span></p>
+                    <p style="margin: 5px 0;">Método: <span id="reciboMetodo"></span></p>
                 </div>
                 <div style="text-align: center; margin-top: 20px;">
                     <p>¡Gracias por su compra!</p>
